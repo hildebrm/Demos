@@ -165,3 +165,75 @@ Fixpoint even (n:nat) : bool :=
   end.
 
 Compute filter even [1;2;3;4;5;6;7;8;9;10].
+
+Require Nat.
+Import Nat.
+
+Definition length_is_1 {X:Type} (l:list X) : bool :=
+  (length l) =? 1.
+
+Example test_filter2 : filter length_is_1 [ [1;2]; [3]; [4]; [5;6;7]; []; [8] ] = [ [3]; [4]; [8] ].
+  Proof. reflexivity. Qed.
+
+Definition countoddmembers' (l:list nat) : nat :=
+  length (filter odd l).
+
+Example test_countoddmembers' : countoddmembers' [1;0;3;1;4;5] = 4.
+  Proof. reflexivity. Qed.
+
+(* Anonymous Functions *)
+
+Definition squareit (n:nat) : nat :=
+  n * n.
+
+Example square_three_times : doit3times squareit 2 = 256.
+  Proof. reflexivity. Qed.
+
+Example square_three_times' :  doit3times (fun n => n * n) 2 = 256.
+  Proof. reflexivity. Qed.
+
+Example test_filter' : filter (fun l => (length l) =? 1) [ [1;2]; [3]; [4]; [5;6;7]; []; [8] ] = [ [3]; [4]; [8] ].
+  Proof. reflexivity. Qed.
+
+Fixpoint map {X Y: Type} (f:X->Y) (l:list X) : list Y :=
+  match l with
+  | [] => []
+  | h::t => (f h)::(map f t)
+  end.
+
+Example test_map : map (fun x => x + 2) [1;3;5;0] = [3;5;7;2].
+  Proof. reflexivity. Qed.
+
+Example test_map' : map odd [1;3;2;5;0] = [true;true;false;true;false].
+  Proof. reflexivity. Qed.
+
+Example test_map'' :
+  map (fun n => [even n; odd n]) [2;1;3;4;5] = [[true;false]; [false;true]; [false;true]; [true;false]; [false;true]].
+  Proof. reflexivity. Qed.
+
+Inductive natorbool : Type :=
+| makeNat (n:nat)
+| makeBool (b:bool).
+
+Definition option_map {X Y:Type} (f:X->Y) (xo:option X) : option Y :=
+  match xo with
+  | None => None
+  | Some x => Some (f x)
+  end.
+
+Fixpoint fold {X Y:Type} (f:X->Y->Y) (l:list X) (b:Y) : Y :=
+  match l with
+  | nil => b
+  | h::t => f h (fold f t b)
+  end.
+
+Compute fold plus [1;2;3;4] 0.
+
+Check fold andb.
+
+Example fold_example1 : fold andb [true;true;false;true] true = false.
+  Proof. reflexivity. Qed.
+
+Example fold_example2 : fold mult [1;2;3;4] 1 = 24.
+  Proof. reflexivity. Qed.
+
