@@ -223,7 +223,7 @@ Definition option_map {X Y:Type} (f:X->Y) (xo:option X) : option Y :=
 
 Fixpoint fold {X Y:Type} (f:X->Y->Y) (l:list X) (b:Y) : Y :=
   match l with
-  | nil => b
+  | [] => b
   | h::t => f h (fold f t b)
   end.
 
@@ -237,3 +237,38 @@ Example fold_example1 : fold andb [true;true;false;true] true = false.
 Example fold_example2 : fold mult [1;2;3;4] 1 = 24.
   Proof. reflexivity. Qed.
 
+
+Definition constfun {X:Type} (x:X) : nat-> X :=
+  fun (k:nat) => x.
+
+Definition ftrue := constfun true.
+
+Definition make_function {X:Type} (x:X) : nat -> nat :=
+  squareit.
+
+Fixpoint nest {X:Type} (n:nat) (f:X -> X) : X -> X :=
+  fun x => match n with
+           | O => x
+           | S n' => f (nest n' f x)
+           end.
+
+(**#########################################################################################################*)
+
+(* Tatics *)
+
+Theorem silly1 : forall (n m : nat),
+  n = m ->
+  n = m.
+  Proof. intros. apply H. Qed.
+
+Theorem silly2 : forall (n m o p : nat),
+  n = m ->
+  (n = m -> [n;o] = [m;p]) ->
+  [n;o] = [m;p].
+  Proof. intros. apply H0. apply H. Qed.
+
+Theorem silly2a : forall (n m : nat),
+  (n,n) = (m,m) ->
+  ( forall (q r : nat), (q,q) = (r,r) -> [q] = [r]) ->
+  [n] = [m].
+  Proof. intros. apply H0. apply H. Qed.
