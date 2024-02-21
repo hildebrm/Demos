@@ -272,3 +272,21 @@ Theorem silly2a : forall (n m : nat),
   ( forall (q r : nat), (q,q) = (r,r) -> [q] = [r]) ->
   [n] = [m].
   Proof. intros. apply H0. apply H. Qed.
+
+Theorem eqb_0_l : forall n:nat,
+    0 =? n = true -> n = 0.
+Proof.
+  intros n. destruct n.
+    - simpl. reflexivity.
+    - simpl. discriminate.
+Qed.
+
+Theorem blah : forall n m : nat,
+  n = m -> S n = S m.
+Proof.
+  intros. rewrite H. reflexivity. Qed.
+
+Theorem eq_implies_succ_equal : forall (n m : nat),
+  n = m ->  S n = S m.
+    Proof.
+      intros. f_equal. apply H. Qed.
