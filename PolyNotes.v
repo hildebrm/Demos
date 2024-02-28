@@ -1,3 +1,5 @@
+
+
 Inductive natlist : Type :=
   | nat_nil
   | nat_cons (b:nat) (l:natlist).
@@ -365,3 +367,52 @@ Fact silly_fact_2 : forall m,
   - reflexivity.
   - reflexivity.
 Qed.
+
+Theorem silly_fact_3 : forall (m : nat),
+  bar m + 1 = bar (m + 1) + 1.
+  Proof. intros. unfold bar. destruct m.
+  - reflexivity.
+  - reflexivity.
+Qed.
+
+Definition sillyfun (n:nat) : bool :=
+  if n =? 3 then true
+  else if n =? 5 then true
+  else false.
+
+Theorem sillyfun_odd : forall n,
+  sillyfun n = true -> odd n = true.
+  Proof. intros. unfold sillyfun in H. destruct (n =? 3) eqn:E1.
+  - apply eqb_true in E1. rewrite E1. reflexivity.
+  - destruct (n =? 5) eqn:E2.
+    -- apply eqb_true in E2. rewrite E2. reflexivity.
+    -- discriminate.
+Qed.
+
+Theorem plus_2_2_is_4 : 2 + 2 = 4.
+  Proof. reflexivity. Qed.
+
+Print plus_2_2_is_4.
+
+Definition plus_claim : Prop := 2 + 2 = 4.
+
+Check plus_claim.
+
+Theorem plus_claim_is_true : plus_claim.
+  Proof. reflexivity. Qed.
+
+Check plus_claim_is_true.
+Check plus_claim.
+
+Definition is_three (n:nat) : Prop :=
+  n = 3.
+
+  Definition injective (A B : Type) (f : A -> B) :=
+    forall x y : A, f x = f y -> x = y.
+
+  Check injective.
+  
+  Check @eq.
+  Print eq.
+
+  Check eq 2 3.
