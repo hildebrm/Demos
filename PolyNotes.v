@@ -290,3 +290,78 @@ Theorem eq_implies_succ_equal : forall (n m : nat),
   n = m ->  S n = S m.
     Proof.
       intros. f_equal. apply H. Qed.
+
+Theorem S_inj : forall (n m : nat) (b:bool),
+  (S n) =? (S m) = b -> n =? m = b.
+  Proof.
+    intros. simpl in H. apply H. Qed.
+
+Theorem silly4 : forall (n m p q : nat),
+  (n = m -> p = q) ->
+  m = n ->
+  p = q.
+Proof.
+  intros. symmetry in H0. apply H. apply H0. Qed.
+
+Fixpoint double (n:nat) : nat :=
+  match n with
+  | O => O
+  | S n' => S (S (double n'))
+  end.
+
+Theorem double_injective_FAILED : forall n m,
+  double n = double m -> n = m.
+  Proof.
+    intros n m. induction n as [| n' IHn'].
+    - simpl. intros eq. destruct m as [| m'] eqn:E.
+      + reflexivity.
+      + discriminate.
+    - intros eq. destruct m as [| m'] eqn:E.
+      + discriminate.
+      + apply f_equal. Abort.
+
+Theorem double_injective : forall n m,
+  double n = double m -> n = m.
+Proof.
+  intros n. induction n as [| n' IHn'].
+  - simpl. intros. destruct m.
+    + reflexivity.
+    + discriminate.
+  - intros. simpl. destruct m.
+    + discriminate.
+    + f_equal. apply IHn'. simpl in H. injection H as H1. apply H1. Qed.
+
+Theorem eqb_true : forall n m,
+  n =? m = true -> n = m.
+Proof.
+    intros n m.
+    generalize dependent m.
+    induction n as [| n' IHn'].
+    - intros. induction m.
+      -- reflexivity.
+      -- simpl in H. discriminate.
+    - intros. induction m.
+      -- simpl in H. discriminate.
+      -- simpl in H. apply IHn' in H. apply eq_implies_succ_equal. apply H.
+Qed.
+
+Definition square n := n * n.
+
+Definition foo (x:nat) : nat := 5.
+
+Fact silly_fact_1 : forall m,
+  foo m + 1 = foo (m + 1) + 1.
+  Proof. intros. reflexivity. Qed.
+
+Definition bar x :=
+  match x with
+  | O => 5
+  | S _ => 5
+  end.
+
+Fact silly_fact_2 : forall m,
+  bar m + 1 = bar (m + 1) + 1.
+  Proof. intros. unfold bar. destruct m.
+  - reflexivity.
+  - reflexivity.
+Qed.

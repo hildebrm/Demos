@@ -438,4 +438,3 @@ Fixpoint find (x:id) (d:partial_map) : natoption :=
     intros. simpl. induction x. simpl. rewrite eqb_refl. reflexivity. Qed.
 
   (**#########################################################################################################################*)
-  
